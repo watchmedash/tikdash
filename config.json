@@ -1,0 +1,122 @@
+{
+  "gifts": {
+    "GG": {
+      "id": "GG",
+      "points": 10,
+      "team": 1,
+      "image": "/uploads/giftImage-1776194292355.webp"
+    },
+    "Rose": {
+      "id": "Rose",
+      "points": 10,
+      "team": 2,
+      "image": "/uploads/giftImage-1776194309331.webp"
+    },
+    "Finger Heart": {
+      "id": "Finger Heart",
+      "points": 75,
+      "team": 1,
+      "image": "/uploads/giftImage-1776194523290.webp"
+    },
+    "Overreact": {
+      "id": "Overreact",
+      "points": 75,
+      "team": 2,
+      "image": "/uploads/giftImage-1776194566596.webp"
+    },
+    "Rosa": {
+      "id": "Rosa",
+      "points": 200,
+      "team": 1,
+      "image": "/uploads/giftImage-1776194653288.webp"
+    },
+    "Heart": {
+      "id": "Heart",
+      "points": 200,
+      "team": 2,
+      "image": "/uploads/giftImage-1776194676624.webp"
+    },
+    "Doughnut": {
+      "id": "Doughnut",
+      "points": 750,
+      "team": 1,
+      "image": "/uploads/giftImage-1776194776957.webp"
+    },
+    "You are on a Roll": {
+      "id": "You are on a Roll",
+      "points": 750,
+      "team": 2,
+      "image": "/uploads/giftImage-1776194810659.webp"
+    },
+    "Hand Hearts": {
+      "id": "Hand Hearts",
+      "points": 3000,
+      "team": 1,
+      "image": "/uploads/giftImage-1776194965207.webp"
+    },
+    "Hand Heart": {
+      "id": "Hand Heart",
+      "points": 3000,
+      "team": 2,
+      "image": "/uploads/giftImage-1776194995628.webp"
+    },
+    "Boxing Gloves": {
+      "id": "Boxing Gloves",
+      "points": 10000,
+      "team": 1,
+      "image": "/uploads/giftImage-1776195084424.webp"
+    },
+    "Corgi": {
+      "id": "Corgi",
+      "points": 10000,
+      "team": 2,
+      "image": "/uploads/giftImage-1776195108024.webp"
+    },
+    "Money Gun": {
+      "id": "Money Gun",
+      "points": 25000,
+      "team": 1,
+      "image": "/uploads/giftImage-1776195455996.webp"
+    },
+    "Cuddle with Me": {
+      "id": "Cuddle with Me",
+      "points": 25000,
+      "team": 2,
+      "image": "/uploads/giftImage-1776195479806.webp"
+    },
+    "Galaxy": {
+      "id": "Galaxy",
+      "points": 75000,
+      "team": 1,
+      "image": "/uploads/giftImage-1776195576048.webp"
+    },
+    "Watermelon Love": {
+      "id": "Watermelon Love",
+      "points": 75000,
+      "team": 2,
+      "image": "/uploads/giftImage-1776195600001.webp"
+    }
+  },
+  "comments": {
+    "dash": {
+      "word": "dash",
+      "points": 2,
+      "team": 1
+    },
+    "meow": {
+      "word": "meow",
+      "points": 2,
+      "team": 2
+    }
+  },
+  "teams": {
+    "team1": {
+      "name": "CR7",
+      "image": "/images/team1.jpg"
+    },
+    "team2": {
+      "name": "MESSI",
+      "image": "/images/team2.jpg"
+    }
+  }
+}

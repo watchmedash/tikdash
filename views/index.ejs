@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TikTok Versus</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+</head>
+<body>
+    <div class="main-container">
+        <!-- Team 1 Section -->
+        <div class="team-wrapper">
+            <div id="team1-gifts-left" class="gifts-column">
+                <!-- Gifts for team 1 (left) will be injected by JS -->
+            </div>
+            <div class="team" id="team1">
+                <img src="/images/team1.jpg" alt="Team 1">
+                <h2>Team 1</h2>
+                <div class="score" id="score1"><%= score1 %></div>
+            </div>
+            <div id="team1-gifts-right" class="gifts-column">
+                <!-- Gifts for team 1 (right) will be injected by JS -->
+            </div>
+        </div>
+
+        <!-- VS Separator -->
+        <div class="separator">
+            <i class="fas fa-hand-fist"></i> VS <i class="fas fa-hand-fist"></i>
+        </div>
+
+        <!-- Team 2 Section -->
+        <div class="team-wrapper">
+            <div id="team2-gifts-left" class="gifts-column">
+                <!-- Gifts for team 2 (left) will be injected by JS -->
+            </div>
+            <div class="team" id="team2">
+                <img src="/images/team2.jpg" alt="Team 2">
+                <h2>Team 2</h2>
+                <div class="score" id="score2"><%= score2 %></div>
+            </div>
+            <div id="team2-gifts-right" class="gifts-column">
+                <!-- Gifts for team 2 (right) will be injected by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- For gift animations (no change) -->
+    <div id="gift-animation"></div>
+    <!-- Add this before your script tags -->
+<div id="timer-container"><div id="timer"></div></div>
+
+    <div class="overlay" id="winner-overlay">
+        <div class="winner-box">
+            <h2>Game Over</h2>
+            <h3 id="winner-text"></h3>
+            <p id="restart-text"></p>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/client.js"></script>
+</body>
+</html>
