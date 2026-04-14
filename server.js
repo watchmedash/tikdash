@@ -177,7 +177,7 @@ io.on('connection', (socket) => {
 
 
 // --- TikTok Live Connection ---
-let tiktokConnection = new WebcastPushConnection('YOUR_TIKTOK_USERNAME');
+let tiktokConnection = new WebcastPushConnection('realmeow404');
 
 tiktokConnection.connect().then(state => {
     console.info(`Connected to roomId ${state.roomId}`);
