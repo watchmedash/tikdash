@@ -197,7 +197,7 @@ io.on('connection', (socket) => {
 // --- Initial Load and Start Server ---
 loadConfig();
 connectToTikTok(config.tiktokUsername);
-const PORT = 3000;
+const PORT = 3006;
 server.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
     console.log(`Main View: http://localhost:${PORT}`);
