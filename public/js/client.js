@@ -1,40 +1,29 @@
 const socket = io();
 
-// --- Element References ---
 const score1El = document.getElementById('score1');
 const score2El = document.getElementById('score2');
 const timerEl = document.getElementById('timer');
 const winnerOverlay = document.getElementById('winner-overlay');
 const winnerText = document.getElementById('winner-text');
 const restartText = document.getElementById('restart-text');
-
-// --- NEW: References to the team images for animation ---
 const team1Image = document.querySelector('#team1 img');
 const team2Image = document.querySelector('#team2 img');
-
-// --- Preload Sounds ---
 const soundTeam1 = new Audio('/sounds/team1.mp3');
 const soundTeam2 = new Audio('/sounds/team2.mp3');
-
-// --- Socket Event Listeners ---
 socket.on('updateScores', ({ score1, score2 }) => {
     score1El.innerText = score1;
     score2El.innerText = score2;
 });
 
-// --- MODIFIED: showGift event now handles animation ---
 socket.on('showGift', (gift) => {
     console.log(`Received gift for Team ${gift.team}: ${gift.giftName}`);
 
-    // Play sound and trigger animation based on the team
     if (gift.team === 1) {
         soundTeam1.play();
-        // Add animation class to the image
         team1Image.classList.add('animate-gift-received');
-        // Remove the class after the animation finishes so it can be re-triggered
         setTimeout(() => {
             team1Image.classList.remove('animate-gift-received');
-        }, 700); // Must match animation duration (0.7s)
+        }, 700);
     } else if (gift.team === 2) {
         soundTeam2.play();
         team2Image.classList.add('animate-gift-received');
@@ -67,17 +56,13 @@ socket.on('gameOver', ({ winner, restartDelay }) => {
 });
 
 socket.on('updateConfig', (config) => {
-    // --- ADD THIS: Update Team Names and Images ---
     if (config.teams) {
-        // Team 1
         document.querySelector('#team1 h2').innerText = config.teams.team1.name;
         document.querySelector('#team1 img').src = config.teams.team1.image;
-        // Team 2
         document.querySelector('#team2 h2').innerText = config.teams.team2.name;
         document.querySelector('#team2 img').src = config.teams.team2.image;
     }
 
-    // The existing gift logic below remains the same
     const team1Gifts = [];
     const team2Gifts = [];
 
