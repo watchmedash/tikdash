@@ -1,14 +1,43 @@
 {
-  "name": "tiktok-space-impact",
+  "name": "tiktok-race",
   "version": "1.0.0",
-  "description": "TikTok Live Gift Game - Space Impact Style",
-  "main": "server.js",
+  "description": "TikTok Live Bar Chart Race",
+  "main": "src/main.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "node server.js"
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "electron": "electron .",
+    "dist": "electron-builder --win --x64"
   },
   "dependencies": {
     "express": "^4.18.2",
-    "socket.io": "^4.7.2"
+    "tiktok-live-connector": "^2.1.1-beta1",
+    "ws": "^8.16.0"
+  },
+  "devDependencies": {
+    "electron": "^30.0.0",
+    "electron-builder": "^24.13.3",
+    "nodemon": "^3.0.3"
+  },
+  "build": {
+    "appId": "com.tiktokrace.app",
+    "productName": "TikTok LIVE Race",
+    "files": [
+      "src/**/*",
+      "public/**/*",
+      "node_modules/**/*",
+      "package.json"
+    ],
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": [{ "target": "nsis", "arch": ["x64"] }]
+    },
+    "nsis": {
+      "oneClick": true,
+      "perMachine": false,
+      "createDesktopShortcut": true
+    }
   }
 }

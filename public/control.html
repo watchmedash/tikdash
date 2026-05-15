@@ -3,233 +3,169 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Space Impact – Control Panel</title>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
-<script src="/socket.io/socket.io.js"></script>
+<title>Country Race — Control</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
-* { margin:0; padding:0; box-sizing:border-box; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scrollbar-width: none; }
+  html::-webkit-scrollbar { display: none; }
 
-html, body {
-  width:100%; height:100%; overflow:hidden;
-  font-family:'Nunito', sans-serif;
-  user-select:none;
-}
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #f5f5f5;
+    color: #222;
+    min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+  }
 
-body {
-  display:flex; align-items:center; justify-content:center;
-  background:linear-gradient(135deg, #1a0d40 0%, #0f1a50 50%, #1a0d40 100%);
-  min-height:100vh;
-}
+  .connect-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 36px 40px;
+    width: 380px;
+    max-width: 95vw;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    text-align: center;
+  }
+  .connect-card h1 { font-size: 22px; font-weight: 800; margin-bottom: 6px; }
+  .connect-card p  { font-size: 13px; color: #888; margin-bottom: 24px; }
 
-/* Animated background blobs */
-body::before {
-  content:''; position:fixed; inset:0; pointer-events:none;
-  background:
-    radial-gradient(circle at 20% 30%, rgba(255,107,157,0.12) 0%, transparent 50%),
-    radial-gradient(circle at 80% 70%, rgba(78,205,196,0.10) 0%, transparent 50%),
-    radial-gradient(circle at 50% 80%, rgba(162,155,254,0.10) 0%, transparent 50%);
-}
+  .input-row { display: flex; gap: 8px; margin-bottom: 10px; }
+  .connect-input {
+    flex: 1; border: 1.5px solid #e0e0e0; border-radius: 10px;
+    padding: 11px 14px; font-size: 14px; font-family: inherit;
+    outline: none; transition: border-color .2s;
+  }
+  .connect-input:focus { border-color: #fe2c55; }
+  .go-btn {
+    background: #fe2c55; color: #fff; border: none;
+    border-radius: 10px; padding: 11px 20px;
+    font-size: 14px; font-weight: 700; font-family: inherit;
+    cursor: pointer; transition: opacity .2s;
+  }
+  .go-btn:hover { opacity: .85; }
+  .go-btn:disabled { opacity: .4; cursor: default; }
 
-.card {
-  position:relative;
-  background:rgba(20,10,55,0.92);
-  border:4px solid #fd79a8;
-  border-radius:28px;
-  padding:48px 64px;
-  text-align:center;
-  box-shadow:
-    0 0 0 8px rgba(253,121,168,0.12),
-    0 30px 80px rgba(0,0,0,0.5),
-    inset 0 1px 0 rgba(255,255,255,0.08);
-  max-width:520px; width:90vw;
-  animation:float 4s ease-in-out infinite;
-}
+  .connect-msg { font-size: 13px; min-height: 18px; color: #888; margin-bottom: 16px; }
+  .connect-msg.err { color: #fe2c55; }
 
-@keyframes float {
-  0%,100% { transform:translateY(0); }
-  50%      { transform:translateY(-10px); }
-}
+  .status-bar {
+    display: none;
+    align-items: center; justify-content: space-between;
+    background: #f5f5f5; border-radius: 10px;
+    padding: 10px 14px; margin-top: 4px;
+    font-size: 13px;
+  }
+  .status-bar.visible { display: flex; }
+  .live-dot {
+    width: 8px; height: 8px; border-radius: 50%; background: #fe2c55;
+    animation: blink 1.2s infinite; margin-right: 8px; flex-shrink: 0;
+  }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+  .stream-name { font-weight: 600; }
+  .stop-btn {
+    font-size: 12px; color: #aaa; background: none; border: 1px solid #e0e0e0;
+    border-radius: 6px; padding: 3px 10px; cursor: pointer; font-family: inherit;
+    transition: all .2s;
+  }
+  .stop-btn:hover { color: #fe2c55; border-color: #fe2c55; }
 
-/* Stars decorating the card */
-.card::before, .card::after {
-  content:'⭐'; position:absolute; font-size:24px;
-  animation:spin 8s linear infinite;
-}
-.card::before { top:-16px; left:20%; }
-.card::after  { bottom:-16px; right:25%; animation-direction:reverse; animation-duration:6s; }
-
-@keyframes spin {
-  0%   { transform:rotate(0deg) scale(1); }
-  50%  { transform:rotate(180deg) scale(1.2); }
-  100% { transform:rotate(360deg) scale(1); }
-}
-
-.game-logo {
-  font-size:clamp(28px, 6vw, 48px);
-  font-weight:900;
-  color:#fff;
-  text-shadow:
-    3px 3px 0 #fd79a8,
-    6px 6px 0 rgba(78,205,196,0.5);
-  letter-spacing:2px;
-  line-height:1.1;
-  margin-bottom:4px;
-}
-
-.tagline {
-  font-size:clamp(10px, 2vw, 14px);
-  font-weight:700;
-  color:#fd79a8;
-  letter-spacing:6px;
-  margin-bottom:36px;
-}
-
-label {
-  display:block;
-  font-size:13px; font-weight:800;
-  color:#a29bfe; letter-spacing:2px;
-  text-align:left; margin-bottom:8px;
-}
-
-.input-wrap {
-  display:flex; gap:0;
-  border:3px solid #fd79a8;
-  border-radius:16px;
-  overflow:hidden;
-  box-shadow:0 4px 20px rgba(253,121,168,0.25);
-  margin-bottom:16px;
-}
-
-#username-input {
-  flex:1;
-  background:rgba(0,0,0,0.4);
-  border:none; outline:none;
-  color:#fff;
-  font-family:'Nunito', sans-serif;
-  font-size:clamp(14px, 2.5vw, 18px);
-  font-weight:800;
-  padding:14px 18px;
-  letter-spacing:1px;
-}
-#username-input::placeholder { color:rgba(255,255,255,0.25); }
-
-.connect-btn {
-  background:linear-gradient(135deg, #fd79a8, #e84393);
-  border:none; cursor:pointer;
-  color:#fff;
-  font-family:'Nunito', sans-serif;
-  font-size:clamp(12px, 2vw, 16px);
-  font-weight:900;
-  padding:14px 24px;
-  letter-spacing:1px;
-  transition:all .15s;
-  white-space:nowrap;
-}
-.connect-btn:hover   { background:linear-gradient(135deg, #ff8ab5, #fd79a8); }
-.connect-btn:active  { transform:scale(0.97); }
-.connect-btn:disabled { opacity:0.5; cursor:not-allowed; }
-
-#status {
-  min-height:20px;
-  font-size:13px; font-weight:700;
-  color:#a29bfe;
-  margin-bottom:24px;
-  transition:color .2s;
-}
-#status.err { color:#ff6b9d; }
-#status.ok  { color:#55efc4; }
-
-.hint-box {
-  background:rgba(162,155,254,0.08);
-  border:2px solid rgba(162,155,254,0.2);
-  border-radius:14px;
-  padding:16px 20px;
-  text-align:left;
-}
-
-.hint-title {
-  font-size:11px; font-weight:800;
-  color:#a29bfe; letter-spacing:3px;
-  margin-bottom:10px;
-}
-
-.hint-row {
-  display:flex; align-items:center; gap:10px;
-  font-size:12px; font-weight:700;
-  color:rgba(255,255,255,0.6);
-  padding:3px 0;
-}
-.hint-row .badge {
-  background:rgba(253,121,168,0.15);
-  border:1px solid rgba(253,121,168,0.3);
-  border-radius:6px;
-  padding:2px 8px;
-  color:#fd79a8;
-  font-size:11px; white-space:nowrap;
-  min-width:80px; text-align:center;
-}
-.hint-row .arrow { color:#a29bfe; }
+  .overlay-link {
+    display: block; margin-top: 20px;
+    font-size: 12px; color: #bbb; text-decoration: none;
+  }
+  .overlay-link:hover { color: #fe2c55; }
 </style>
 </head>
 <body>
-<div class="card">
-  <div class="game-logo">SPACE IMPACT</div>
-  <div class="tagline">× TIKTOK LIVE ×</div>
-
-  <label>STREAMER USERNAME</label>
-  <div class="input-wrap">
-    <input id="username-input" type="text" placeholder="@username" spellcheck="false" autocomplete="off" />
-    <button class="connect-btn" id="connect-btn">🚀 CONNECT</button>
+<div class="connect-card">
+  <h1>Country Race</h1>
+  <p>Control Panel</p>
+  <div class="input-row">
+    <input id="u-input" class="connect-input" placeholder="@username" autocomplete="off" spellcheck="false" />
+    <button class="go-btn" id="go-btn" onclick="doConnect()">Go</button>
   </div>
-
-  <div id="status">Enter a TikTok username that is currently live</div>
-
-  <div class="hint-box">
-    <div class="hint-title">HOW IT WORKS</div>
-    <div class="hint-row"><span class="badge">10 Likes</span><span class="arrow">→</span> 1 enemy</div>
-    <div class="hint-row"><span class="badge">Comment</span><span class="arrow">→</span> 1 enemy</div>
-    <div class="hint-row"><span class="badge">Share</span><span class="arrow">→</span> 1 enemy + Speed</div>
-    <div class="hint-row"><span class="badge">Follow</span><span class="arrow">→</span> 3 enemies + Shield</div>
-    <div class="hint-row"><span class="badge">Gift (N coins)</span><span class="arrow">→</span> N enemies + power-up</div>
+  <div class="connect-msg" id="conn-msg"></div>
+  <div class="status-bar" id="status-bar">
+    <div style="display:flex;align-items:center">
+      <div class="live-dot"></div>
+      <span class="stream-name" id="stream-name"></span>
+    </div>
+    <button class="stop-btn" onclick="doDisconnect()">Stop</button>
   </div>
+  <a href="/" class="overlay-link" target="_blank">Open overlay →</a>
 </div>
 
 <script>
-const socket = io();
-const btn    = document.getElementById('connect-btn');
-const input  = document.getElementById('username-input');
-const status = document.getElementById('status');
+const WS = `${location.protocol === 'https:' ? 'wss' : 'ws'}://${location.host}`;
+let socket;
 
-function setStatus(msg, cls = '') {
-  status.textContent = msg;
-  status.className   = cls;
+async function doConnect() {
+  const raw = document.getElementById('u-input').value.trim().replace(/^@/, '');
+  if (!raw) return;
+  setMsg('Connecting…', false);
+  document.getElementById('go-btn').disabled = true;
+  try {
+    await fetch('/connect', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ username: raw })
+    });
+  } catch {
+    setMsg('Server error', true);
+    document.getElementById('go-btn').disabled = false;
+  }
 }
 
-socket.on('connected', ({ username }) => {
-  localStorage.setItem('tiktok_username', username);
-  setStatus(`✅ Connected to @${username}! Game is live.`, 'ok');
-  btn.textContent = '🚀 CONNECT';
-  btn.disabled    = false;
-});
-
-socket.on('tiktok_error', (msg) => {
-  setStatus(msg, 'err');
-  btn.textContent = '🚀 CONNECT';
-  btn.disabled    = false;
-});
-
-function doConnect() {
-  const val = input.value.trim().replace(/^@/, '');
-  if (!val) { setStatus('Enter a username first.', 'err'); return; }
-  setStatus(`Connecting to @${val}...`);
-  btn.textContent = '⏳ ...';
-  btn.disabled    = true;
-  socket.emit('connect_tiktok', { username: val });
+async function doDisconnect() {
+  await fetch('/disconnect', { method: 'POST' });
 }
 
-btn.addEventListener('click', doConnect);
-input.addEventListener('keydown', e => { if (e.key === 'Enter') doConnect(); });
-input.focus();
+function setMsg(text, isErr) {
+  const el = document.getElementById('conn-msg');
+  el.textContent = text;
+  el.className = 'connect-msg' + (isErr ? ' err' : '');
+}
+
+function initWS() {
+  socket = new WebSocket(WS);
+  socket.onmessage = e => handle(JSON.parse(e.data));
+  socket.onclose = () => setTimeout(initWS, 1000);
+  socket.onerror = () => socket.close();
+}
+
+function handle(msg) {
+  if (msg.type === 'init' || msg.type === 'connection_status') {
+    applyStatus(msg.status, msg.username, msg.error);
+  }
+}
+
+function applyStatus(status, username, error) {
+  const statusBar = document.getElementById('status-bar');
+  if (status === 'connecting') {
+    setMsg(`Connecting to @${username}…`, false);
+    document.getElementById('go-btn').disabled = true;
+    statusBar.classList.remove('visible');
+  } else if (status === 'connected') {
+    setMsg('', false);
+    document.getElementById('go-btn').disabled = false;
+    document.getElementById('stream-name').textContent = `@${username}`;
+    statusBar.classList.add('visible');
+    document.getElementById('u-input').value = '';
+  } else if (status === 'error') {
+    setMsg(error || 'Failed. Is the user LIVE?', true);
+    document.getElementById('go-btn').disabled = false;
+    statusBar.classList.remove('visible');
+  } else {
+    setMsg('', false);
+    document.getElementById('go-btn').disabled = false;
+    statusBar.classList.remove('visible');
+  }
+}
+
+document.getElementById('u-input').addEventListener('keydown', e => { if (e.key==='Enter') doConnect(); });
+
+initWS();
 </script>
 </body>
 </html>
