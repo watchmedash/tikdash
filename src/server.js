@@ -177,7 +177,7 @@ wss.on('connection', ws => {
   ws.on('close', () => console.log('Browser disconnected'));
 });
 
-const PORT = process.env.PORT || 7735;
+const PORT = process.env.PORT || 7739;
 server.listen(PORT, () => {
   console.log(`\n🏁 Country Race → http://localhost:${PORT}`);
   console.log(`📡 Control panel → http://localhost:${PORT}/control\n`);
