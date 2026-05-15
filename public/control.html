@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Space Impact – Control Panel</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+<script src="/socket.io/socket.io.js"></script>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+
+html, body {
+  width:100%; height:100%; overflow:hidden;
+  font-family:'Nunito', sans-serif;
+  user-select:none;
+}
+
+body {
+  display:flex; align-items:center; justify-content:center;
+  background:linear-gradient(135deg, #1a0d40 0%, #0f1a50 50%, #1a0d40 100%);
+  min-height:100vh;
+}
+
+/* Animated background blobs */
+body::before {
+  content:''; position:fixed; inset:0; pointer-events:none;
+  background:
+    radial-gradient(circle at 20% 30%, rgba(255,107,157,0.12) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(78,205,196,0.10) 0%, transparent 50%),
+    radial-gradient(circle at 50% 80%, rgba(162,155,254,0.10) 0%, transparent 50%);
+}
+
+.card {
+  position:relative;
+  background:rgba(20,10,55,0.92);
+  border:4px solid #fd79a8;
+  border-radius:28px;
+  padding:48px 64px;
+  text-align:center;
+  box-shadow:
+    0 0 0 8px rgba(253,121,168,0.12),
+    0 30px 80px rgba(0,0,0,0.5),
+    inset 0 1px 0 rgba(255,255,255,0.08);
+  max-width:520px; width:90vw;
+  animation:float 4s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%,100% { transform:translateY(0); }
+  50%      { transform:translateY(-10px); }
+}
+
+/* Stars decorating the card */
+.card::before, .card::after {
+  content:'⭐'; position:absolute; font-size:24px;
+  animation:spin 8s linear infinite;
+}
+.card::before { top:-16px; left:20%; }
+.card::after  { bottom:-16px; right:25%; animation-direction:reverse; animation-duration:6s; }
+
+@keyframes spin {
+  0%   { transform:rotate(0deg) scale(1); }
+  50%  { transform:rotate(180deg) scale(1.2); }
+  100% { transform:rotate(360deg) scale(1); }
+}
+
+.game-logo {
+  font-size:clamp(28px, 6vw, 48px);
+  font-weight:900;
+  color:#fff;
+  text-shadow:
+    3px 3px 0 #fd79a8,
+    6px 6px 0 rgba(78,205,196,0.5);
+  letter-spacing:2px;
+  line-height:1.1;
+  margin-bottom:4px;
+}
+
+.tagline {
+  font-size:clamp(10px, 2vw, 14px);
+  font-weight:700;
+  color:#fd79a8;
+  letter-spacing:6px;
+  margin-bottom:36px;
+}
+
+label {
+  display:block;
+  font-size:13px; font-weight:800;
+  color:#a29bfe; letter-spacing:2px;
+  text-align:left; margin-bottom:8px;
+}
+
+.input-wrap {
+  display:flex; gap:0;
+  border:3px solid #fd79a8;
+  border-radius:16px;
+  overflow:hidden;
+  box-shadow:0 4px 20px rgba(253,121,168,0.25);
+  margin-bottom:16px;
+}
+
+#username-input {
+  flex:1;
+  background:rgba(0,0,0,0.4);
+  border:none; outline:none;
+  color:#fff;
+  font-family:'Nunito', sans-serif;
+  font-size:clamp(14px, 2.5vw, 18px);
+  font-weight:800;
+  padding:14px 18px;
+  letter-spacing:1px;
+}
+#username-input::placeholder { color:rgba(255,255,255,0.25); }
+
+.connect-btn {
+  background:linear-gradient(135deg, #fd79a8, #e84393);
+  border:none; cursor:pointer;
+  color:#fff;
+  font-family:'Nunito', sans-serif;
+  font-size:clamp(12px, 2vw, 16px);
+  font-weight:900;
+  padding:14px 24px;
+  letter-spacing:1px;
+  transition:all .15s;
+  white-space:nowrap;
+}
+.connect-btn:hover   { background:linear-gradient(135deg, #ff8ab5, #fd79a8); }
+.connect-btn:active  { transform:scale(0.97); }
+.connect-btn:disabled { opacity:0.5; cursor:not-allowed; }
+
+#status {
+  min-height:20px;
+  font-size:13px; font-weight:700;
+  color:#a29bfe;
+  margin-bottom:24px;
+  transition:color .2s;
+}
+#status.err { color:#ff6b9d; }
+#status.ok  { color:#55efc4; }
+
+.hint-box {
+  background:rgba(162,155,254,0.08);
+  border:2px solid rgba(162,155,254,0.2);
+  border-radius:14px;
+  padding:16px 20px;
+  text-align:left;
+}
+
+.hint-title {
+  font-size:11px; font-weight:800;
+  color:#a29bfe; letter-spacing:3px;
+  margin-bottom:10px;
+}
+
+.hint-row {
+  display:flex; align-items:center; gap:10px;
+  font-size:12px; font-weight:700;
+  color:rgba(255,255,255,0.6);
+  padding:3px 0;
+}
+.hint-row .badge {
+  background:rgba(253,121,168,0.15);
+  border:1px solid rgba(253,121,168,0.3);
+  border-radius:6px;
+  padding:2px 8px;
+  color:#fd79a8;
+  font-size:11px; white-space:nowrap;
+  min-width:80px; text-align:center;
+}
+.hint-row .arrow { color:#a29bfe; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="game-logo">SPACE IMPACT</div>
+  <div class="tagline">× TIKTOK LIVE ×</div>
+
+  <label>STREAMER USERNAME</label>
+  <div class="input-wrap">
+    <input id="username-input" type="text" placeholder="@username" spellcheck="false" autocomplete="off" />
+    <button class="connect-btn" id="connect-btn">🚀 CONNECT</button>
+  </div>
+
+  <div id="status">Enter a TikTok username that is currently live</div>
+
+  <div class="hint-box">
+    <div class="hint-title">HOW IT WORKS</div>
+    <div class="hint-row"><span class="badge">10 Likes</span><span class="arrow">→</span> 1 enemy</div>
+    <div class="hint-row"><span class="badge">Comment</span><span class="arrow">→</span> 1 enemy</div>
+    <div class="hint-row"><span class="badge">Share</span><span class="arrow">→</span> 1 enemy + Speed</div>
+    <div class="hint-row"><span class="badge">Follow</span><span class="arrow">→</span> 3 enemies + Shield</div>
+    <div class="hint-row"><span class="badge">Gift (N coins)</span><span class="arrow">→</span> N enemies + power-up</div>
+  </div>
+</div>
+
+<script>
+const socket = io();
+const btn    = document.getElementById('connect-btn');
+const input  = document.getElementById('username-input');
+const status = document.getElementById('status');
+
+function setStatus(msg, cls = '') {
+  status.textContent = msg;
+  status.className   = cls;
+}
+
+socket.on('connected', ({ username }) => {
+  localStorage.setItem('tiktok_username', username);
+  setStatus(`✅ Connected to @${username}! Game is live.`, 'ok');
+  btn.textContent = '🚀 CONNECT';
+  btn.disabled    = false;
+});
+
+socket.on('tiktok_error', (msg) => {
+  setStatus(msg, 'err');
+  btn.textContent = '🚀 CONNECT';
+  btn.disabled    = false;
+});
+
+function doConnect() {
+  const val = input.value.trim().replace(/^@/, '');
+  if (!val) { setStatus('Enter a username first.', 'err'); return; }
+  setStatus(`Connecting to @${val}...`);
+  btn.textContent = '⏳ ...';
+  btn.disabled    = true;
+  socket.emit('connect_tiktok', { username: val });
+}
+
+btn.addEventListener('click', doConnect);
+input.addEventListener('keydown', e => { if (e.key === 'Enter') doConnect(); });
+input.focus();
+</script>
+</body>
+</html>
